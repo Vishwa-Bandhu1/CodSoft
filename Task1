@@ -1,0 +1,64 @@
+import java.util.Scanner;
+import java.util.Random;
+
+public class Task1 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        
+        int a = 1; //MinRange
+        int b = 100; //MaxRange
+        int c = 7; //MaxAttempts
+        
+        int totalScore = 0;
+        boolean playAgain = true;
+
+        while (playAgain) {
+            int randomNumber = RandomNumber(a, b);
+            int points = Game(scanner, random, randomNumber, c);
+            totalScore += points;
+
+            System.out.print("Do you want to play again? (yes/no): ");
+            String answer = scanner.next();
+            playAgain = answer.equalsIgnoreCase("yes");
+        }
+
+        System.out.println("Thanks for playing! Your final score is " + totalScore + ".");
+        scanner.close();
+    }
+
+    private static int RandomNumber(int min, int max) {
+        return new Random().nextInt(max - min + 1) + min;
+    }
+
+    private static int Game(Scanner scanner, Random random, int correctNumber, int MaxAttempts) {
+        int attempts = 0;
+
+        while (attempts < MaxAttempts) {
+            System.out.print("Enter your guess between 1 and 100: ");
+            int userGuess = UserGuess(scanner);
+
+            if (userGuess == correctNumber) {
+                System.out.println("Congratulations! You guessed the correct number.");
+                return 1; // One point for a correct guess
+            } else if (userGuess > correctNumber) {
+                System.out.println("Your guess is too high. Try again.");
+            } else {
+                System.out.println("Your guess is too low. Try again.");
+            }
+
+            attempts++;
+        }
+
+        System.out.println("You've reached the maximum number of attempts. The correct guessed number was " + correctNumber + ".");
+        return 0; // Zero points for not guessing correctly within the attempts
+    }
+
+    private static int UserGuess(Scanner scanner) {
+        while (!scanner.hasNextInt()) {
+            System.out.println("Please enter a valid number.");
+            scanner.next(); // invalid input
+        }
+        return scanner.nextInt();
+    }
+}
